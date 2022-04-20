@@ -40,4 +40,3 @@ static std::string bot2name = "Elizabeth";
 static std::string userName;
 static std::string whoseTurn;
 static std::string whoseNext;
-static bool notPaused = true;
