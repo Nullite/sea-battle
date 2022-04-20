@@ -235,6 +235,10 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 			{
 				continue;
 			}
+			if (col + i == 10)
+			{
+				return true;
+			}
 			try
 			{
 				int square = returnSquare(row, col + i);
@@ -243,6 +247,7 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 				{
 					return false;
 				}
+				
 
 			}
 			catch (const std::exception& )
@@ -272,10 +277,6 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 					return false;
 				}
 
-				if (col + i == 9)
-				{
-					return true;
-				}
 			}
 			catch (const std::exception& )
 			{
