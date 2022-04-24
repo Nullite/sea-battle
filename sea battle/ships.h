@@ -6,8 +6,7 @@
 #include "board.h"
 #include "botLogic.h"
 
-bool isShip(int shipType);
-void shipCount(int shipType);
-bool shipsIsOver();
-void askShip(std::vector <int>& ship, std::string board);
-std::vector<int> getShip(std::string board);
+bool isShip(Game& game, int shipType);
+void shipCount(Game& game);
+bool shipsIsOver(Game& game);
+void askShip(Game& game, std::string& board, Elements instance);

@@ -89,7 +89,7 @@ std::vector<int> returnCoordinates(int square)
 	return coords;
 }
 
-std::vector<int> getSquare(int shipType, int shipLayout, std::string& board)
+std::vector<int> getSquare(int shipType, int shipLayout, std::string& board, Elements instance)
 {
 	char xCoord;
 	char yCoord;
@@ -107,7 +107,7 @@ std::vector<int> getSquare(int shipType, int shipLayout, std::string& board)
 			<< "end y coordinate "
 			<< "(from 1 to 9 or 0 (means 10))\n\n";
 
-		displayChoosedShip(shipType, shipLayout);
+		displayChoosedShip(shipType, shipLayout, instance);
 
 		while (1)
 		{
@@ -185,12 +185,12 @@ std::vector<int> getSquare(int shipType, int shipLayout, std::string& board)
 	return coordinates;
 }
 
-void placeShip(std::vector<int> ship, std::string& board, std::vector<std::vector <int> > &ships)
+void placeShip(Game& game, User& player, Elements instance)
 {
-	int shipLong = ship[0];
-	int shipHorizontalLayout = ship[1];
+	int shipLong = game.ship[0];
+	int shipHorizontalLayout = game.ship[1];
 	std::vector <int> newShip;
-	std::vector<int> coordinates = getSquare(shipLong, shipHorizontalLayout, board);
+	std::vector<int> coordinates = getSquare(shipLong, shipHorizontalLayout, player.board, instance);
 	int col = coordinates[0];
 	int row = coordinates[1];
 
@@ -202,7 +202,7 @@ void placeShip(std::vector<int> ship, std::string& board, std::vector<std::vecto
 		for (int i = 0; i < shipLong; i++)
 		{
 			int square = returnSquare(row, col);
-			board.replace(square, 2, shipElement);
+			player.board.replace(square, 2, instance.shipElement);
 			row += 1;
 			newShip.push_back(square);
 		}
@@ -215,12 +215,12 @@ void placeShip(std::vector<int> ship, std::string& board, std::vector<std::vecto
 		for (int i = 0; i < shipLong; i++)
 		{
 			int square = returnSquare(row, col);
-			board.replace(square, 2, shipElement);
+			player.board.replace(square, 2, instance.shipElement);
 			col += 1;
 			newShip.push_back(square);
 		}
 	}
-	ships.push_back(newShip);
+	player.ships.push_back(newShip);
 	PlaySound(TEXT("./sound/morze.wav"), NULL, SND_FILENAME | SND_ASYNC);
 }
 
@@ -313,15 +313,15 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 	return true;
 }
 
-std::vector<std::vector <int> > fillBoard(std::string& board)
+void fillBoard(Game& game, User& player, Elements instance)
 {
 	PlaySound(0, 0, 0);
 	std::vector<std::vector <int> > ships;
-	while (!shipsIsOver())
+	while (!shipsIsOver(game))
 	{
-		showBoard(board);
-		placeShip(getShip(board), board, ships);
+		showBoard(player.board);
+		askShip(game, player.board, instance);
+		placeShip(game, player, instance);
 		system("cls");
 	}	
-	return ships;
 }

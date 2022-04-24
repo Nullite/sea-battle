@@ -1,72 +1,72 @@
 #include "save.h"
 
 
-void saveStrings(std::string userBoard, std::string comp1Board, std::string comp2Board, std::string userEnemyBoard, std::string bot1EnemyBoard, std::string bot2EnemyBoard, std::string userName, std::string whoseTurn, std::string whoseNext)
+void saveStrings(User player, Bot bot1, Bot bot2, Game game)
 {
 	
 	std::ofstream save("saveStr.sb");
-	if (userBoard.size())
+	if (player.board.size())
 	{
-		save << userBoard << '\n';
+		save << player.board << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 	
-	if (comp1Board.size())
+	if (bot1.board.size())
 	{
-		save << comp1Board << '\n';
+		save << bot1.board << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 	
-	if (comp2Board.size())
+	if (bot2.board.size())
 	{
-		save << comp2Board << '\n';
+		save << bot2.board << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 
-	if (userEnemyBoard.size())
+	if (player.enemyBoard.size())
 	{
-		save << userEnemyBoard << '\n';
+		save << player.enemyBoard << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 
-	if (bot1EnemyBoard.size())
+	if (bot1.enemyBoard.size())
 	{
-		save << bot1EnemyBoard << '\n';
+		save << bot1.enemyBoard << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 
-	if (bot2EnemyBoard.size())
+	if (bot2.enemyBoard.size())
 	{
-		save << bot2EnemyBoard << '\n';
+		save << bot2.enemyBoard << '\n';
 	}
 	else
 	{
 		save << "\n\n";
 	}
 	
-	save << userName << '\n';
-	save << whoseTurn << '\n';
-	save << whoseNext << '\n';
+	save << player.name << '\n';
+	save << game.whoseTurn << '\n';
+	save << game.whoseNext << '\n';
 
 	save.close();
 }
 
-void getStrings(std::string& userBoard, std::string& comp1Board, std::string& comp2Board, std::string& userEnemyBoard, std::string& bot1EnemyBoard, std::string& bot2EnemyBoard, std::string& userName, std::string& whoseTurn, std::string& whoseNext)
+void getStrings(User& player, Bot& bot1, Bot& bot2, Game& game)
 {
 	std::ifstream get("saveStr.sb");
 
@@ -75,14 +75,14 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		userBoard += temp;
+		player.board += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			userBoard += '\n';
-			userBoard += temp;
+			player.board += '\n';
+			player.board += temp;
 		}
-		userBoard += '\n';
+		player.board += '\n';
 	}
 
 	getline(get, temp);
@@ -90,14 +90,14 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		comp1Board += temp;
+		bot1.board += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			comp1Board += '\n';
-			comp1Board += temp;
+			bot1.board += '\n';
+			bot1.board += temp;
 		}
-		comp1Board += '\n';
+		bot1.board += '\n';
 	}
 
 	getline(get, temp);
@@ -105,14 +105,14 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		comp2Board += temp;
+		bot2.board += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			comp2Board += '\n';
-			comp2Board += temp;
+			bot2.board += '\n';
+			bot2.board += temp;
 		}
-		comp2Board += '\n';
+		bot2.board += '\n';
 	}
 
 	getline(get, temp);
@@ -120,14 +120,14 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		userEnemyBoard += temp;
+		player.enemyBoard += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			userEnemyBoard += '\n';
-			userEnemyBoard += temp;
+			player.enemyBoard += '\n';
+			player.enemyBoard += temp;
 		}
-		userEnemyBoard += '\n';
+		player.enemyBoard += '\n';
 	}
 
 	getline(get, temp);
@@ -135,14 +135,14 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		bot1EnemyBoard += temp;
+		bot1.enemyBoard += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			bot1EnemyBoard += '\n';
-			bot1EnemyBoard += temp;
+			bot1.enemyBoard += '\n';
+			bot1.enemyBoard += temp;
 		}
-		bot1EnemyBoard += '\n';
+		bot1.enemyBoard += '\n';
 	}
 
 	getline(get, temp);
@@ -150,36 +150,35 @@ void getStrings(std::string& userBoard, std::string& comp1Board, std::string& co
 
 	if (temp.size())
 	{
-		bot2EnemyBoard += temp;
+		bot2.enemyBoard += temp;
 		for (int i = 0; i < 21; i++)
 		{
 			getline(get, temp);
-			bot2EnemyBoard += '\n';
-			bot2EnemyBoard += temp;
+			bot2.enemyBoard += '\n';
+			bot2.enemyBoard += temp;
 		}
-		bot2EnemyBoard += '\n';
+		bot2.enemyBoard += '\n';
 	}
 
 	getline(get, temp);
-	getline(get, userName);
-	getline(get, whoseTurn);
-	getline(get, whoseNext);
+	getline(get, player.name);
+	getline(get, game.whoseTurn);
+	getline(get, game.whoseNext);
 
 	get.close();
 }
 
-void saveVec(std::vector<std::vector<int>> userShips, std::vector<std::vector<int>> comp1Ships, std::vector<std::vector <int> > comp2Ships, std::vector<int> coordsFinishingForBot1, std::vector<int> coordsFinishingForBot2)
-{
+void saveVec(User player, Bot bot1, Bot bot2) {
 	std::ofstream save("saveVec.sb");
-	if (userShips.size())
+	if (player.ships.size())
 	{
-		save << userShips.size() << '\n';
-		for (int i = 0; i < userShips.size(); i++)
+		save << player.ships.size() << '\n';
+		for (int i = 0; i < player.ships.size(); i++)
 		{
-			save << userShips[i].size();
-			for (int j = 0; j < userShips[i].size(); j++)
+			save << player.ships[i].size();
+			for (int j = 0; j < player.ships[i].size(); j++)
 			{
-				save << userShips[i][j] << '\n';
+				save << player.ships[i][j] << '\n';
 			}
 		}
 	}
@@ -188,15 +187,15 @@ void saveVec(std::vector<std::vector<int>> userShips, std::vector<std::vector<in
 		save << '\n';
 	}
 	
-	if (comp1Ships.size())
+	if (bot1.ships.size())
 	{
-		save << comp1Ships.size() << '\n';
-		for (int i = 0; i < comp1Ships.size(); i++)
+		save << bot1.ships.size() << '\n';
+		for (int i = 0; i < bot1.ships.size(); i++)
 		{
-			save << comp1Ships[i].size();
-			for (int j = 0; j < comp1Ships[i].size(); j++)
+			save << bot1.ships[i].size();
+			for (int j = 0; j < bot1.ships[i].size(); j++)
 			{
-				save << comp1Ships[i][j] << '\n';
+				save << bot1.ships[i][j] << '\n';
 			}
 		}
 	}
@@ -205,15 +204,15 @@ void saveVec(std::vector<std::vector<int>> userShips, std::vector<std::vector<in
 		save << '\n';
 	}
 
-	if (comp2Ships.size())
+	if (bot2.ships.size())
 	{
-		save << comp2Ships.size() << '\n';
-		for (int i = 0; i < comp2Ships.size(); i++)
+		save << bot2.ships.size() << '\n';
+		for (int i = 0; i < bot2.ships.size(); i++)
 		{
-			save << comp2Ships[i].size();
-			for (int j = 0; j < comp2Ships[i].size(); j++)
+			save << bot2.ships[i].size();
+			for (int j = 0; j < bot2.ships[i].size(); j++)
 			{
-				save << comp2Ships[i][j] << '\n';
+				save << bot2.ships[i][j] << '\n';
 			}
 		}
 	}
@@ -222,20 +221,20 @@ void saveVec(std::vector<std::vector<int>> userShips, std::vector<std::vector<in
 		save << '\n';
 	}
 
-	for (int i = 0; i < coordsFinishingForBot1.size(); i++)
+	for (int i = 0; i < bot1.coordsFinishing.size(); i++)
 	{
-		save << coordsFinishingForBot1[i] << '\n';
+		save << bot1.coordsFinishing[i] << '\n';
 	}
 
-	for (int i = 0; i < coordsFinishingForBot2.size(); i++)
+	for (int i = 0; i < bot2.coordsFinishing.size(); i++)
 	{
-		save << coordsFinishingForBot2[i] << '\n';
+		save << bot2.coordsFinishing[i] << '\n';
 	}
 	
 	save.close();
 }
 
-void getVec(std::vector<std::vector<int>>& userShips, std::vector<std::vector<int>>& comp1Ships, std::vector<std::vector <int>>& comp2Ships, std::vector<int>& coordsFinishingForBot1, std::vector<int> &coordsFinishingForBot2)
+void getVec(User& player, Bot& bot1, Bot& bot2)
 {
 	std::string temp;
 	std::ifstream save("saveVec.sb");
@@ -258,7 +257,7 @@ void getVec(std::vector<std::vector<int>>& userShips, std::vector<std::vector<in
 					getline(save, temp);
 					tempVec.push_back(stoi(temp));
 				}
-				userShips.push_back(tempVec);
+				player.ships.push_back(tempVec);
 				tempVec.erase(tempVec.begin(), tempVec.end());
 			}
 		}
@@ -283,7 +282,7 @@ void getVec(std::vector<std::vector<int>>& userShips, std::vector<std::vector<in
 					getline(save, temp);
 					tempVec.push_back(stoi(temp));
 				}
-				comp1Ships.push_back(tempVec);
+				bot1.ships.push_back(tempVec);
 				tempVec.erase(tempVec.begin(), tempVec.end());
 			}
 		}
@@ -308,7 +307,7 @@ void getVec(std::vector<std::vector<int>>& userShips, std::vector<std::vector<in
 					getline(save, temp);
 					tempVec.push_back(stoi(temp));
 				}
-				comp2Ships.push_back(tempVec);
+				bot2.ships.push_back(tempVec);
 				tempVec.erase(tempVec.begin(), tempVec.end());
 			}
 		}
@@ -318,51 +317,55 @@ void getVec(std::vector<std::vector<int>>& userShips, std::vector<std::vector<in
 	for (int i = 0; i < 4; i++)
 	{
 		getline(save, temp);
-		coordsFinishingForBot1[i] = (stoi(temp));
+		bot1.coordsFinishing[i] = (stoi(temp));
 	}
 
 	
 	for (int i = 0; i < 4; i++)
 	{
 		getline(save, temp);
-		coordsFinishingForBot2[i] = (stoi(temp));
+		bot2.coordsFinishing[i] = (stoi(temp));
 	}
 	save.close();
 }
 
-void saveBool(bool isUserPlay, bool bot1Aiming, bool bot2Aiming, std::vector<char> players)
+void saveBool(User player, Bot bot1, Bot bot2, Game game)
 {
-	std::ofstream clear_file("saveBool.sb", std::ios_base::out);
-	clear_file.close();
-	std::ofstream save("saveBool.sb");
+	std::ofstream save("saveBool.sb", std::ios_base::out);
 
-	save << isUserPlay;
-	save << bot1Aiming;
-	save << bot2Aiming;
-	save << players[0];
-	save << players[1];
+	save << player.isPlay;
+	save << bot1.isPlay;
+	save << bot2.isPlay;
+	save << bot1.aim;
+	save << bot2.aim;
+	save << game.players[0];
+	save << game.players[1];
 	save.close();
 }
 
-void getBool(bool& isUserPlay, bool& bot1Aiming, bool& bot2Aiming, std::vector<char>& players)
+void getBool(User& player, Bot& bot1, Bot& bot2, Game& game)
 {
 	std::ifstream save("saveBool.sb");
 	char ch;
 	char temp;
 	save.get(temp);
-	isUserPlay = (int)temp - 48;
+	player.isPlay = (int)temp - 48;
 	save.get(temp);
-	bot1Aiming = (int)temp - 48;
+	bot1.isPlay = (int)temp - 48;
 	save.get(temp);
-	bot2Aiming = (int)temp - 48;
+	bot2.isPlay = (int)temp - 48;
+	save.get(temp);
+	bot1.aim = (int)temp - 48;
+	save.get(temp);
+	bot2.aim = (int)temp - 48;
 	save.get(ch);
-	players.push_back(ch);
+	game.players.push_back(ch);
 	save.get(ch);
-	players.push_back(ch);
+	game.players.push_back(ch);
 	save.close();	
 }
 
-void savemgmt(bool isSaved)
+void savemgmt()
 {
 	std::ofstream save("savemgmt.sb");
 	save << 1;
@@ -383,4 +386,22 @@ void deleteSave()
 	std::ofstream save("savemgmt.sb");
 	save << 0;
 	save.close();
+}
+
+void globalSave(User& player, Bot bot1, Bot bot2,  Game& game)
+{
+	saveStrings(player, bot1, bot2, game);
+	saveVec(player, bot1, bot2);
+	saveBool(player, bot1, bot2, game);
+	savemgmt();
+	player.saveGame = false;
+	game.saveLoad = false;
+	showIfSaved();
+}
+
+void globalGet(User& player, Bot& bot1, Bot& bot2, Game& game)
+{
+	getStrings(player, bot1, bot2, game);
+	getVec(player, bot1, bot2);
+	getBool(player, bot1, bot2, game);
 }

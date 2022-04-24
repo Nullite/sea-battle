@@ -46,35 +46,35 @@ void showIfHit(int shipLong, bool userTurn)
 	}
 }
 
-void displayChoosedShip(int shipType, int shipLayout)
+void displayChoosedShip(int shipType, int shipLayout, Elements instance)
 {
 	if (shipType == 4 && !shipLayout)
 	{
-		std::cout << "choosed ship:   " << verticalBattleship;
+		std::cout << "choosed ship:   " << instance.verticalBattleship;
 	}
 	else if (shipType == 4 && shipLayout)
 	{
-		std::cout << "choosed ship:   " << horizontalBattleship;
+		std::cout << "choosed ship:   " << instance.horizontalBattleship;
 	}
 	else if (shipType == 3 && !shipLayout)
 	{
-		std::cout << "choosed ship:   " << verticalCruiser;
+		std::cout << "choosed ship:   " << instance.verticalCruiser;
 	}
 	else if (shipType == 3 && shipLayout)
 	{
-		std::cout << "choosed ship:   " << horizontalCruiser;
+		std::cout << "choosed ship:   " << instance.horizontalCruiser;
 	}
 	else if (shipType == 2 && !shipLayout)
 	{
-		std::cout << "choosed ship:   " << verticalDestroyer;
+		std::cout << "choosed ship:   " << instance.verticalDestroyer;
 	}
 	else if (shipType == 2 && shipLayout)
 	{
-		std::cout << "choosed ship:   " << horizontalDestroyer;
+		std::cout << "choosed ship:   " << instance.horizontalDestroyer;
 	}
 	else
 	{
-		std::cout << "choosed ship:   " << submarine;
+		std::cout << "choosed ship:   " << instance.submarine;
 	}
 }
 
@@ -136,7 +136,7 @@ std::vector<int> checkShip(int ship, std::vector<std::vector<int>>& ships, bool 
 		system("cls");
 		Sleep(500);
 		PlaySound(TEXT("./sound/alarm.wav"), NULL, SND_FILENAME | SND_ASYNC);
-		showIfHit(ships[ship].size() - 2, userTurn);
+		showIfHit((int)ships[ship].size() - 2, userTurn);
 		Sleep(1500);
 	}
 	return params;
@@ -169,7 +169,7 @@ void showDestroyed(int ship)
 	}
 }
 
-bool destroyShip(std::vector<int> params, std::string &enemyBoard)
+bool destroyShip(std::vector<int> params, std::string &enemyBoard, Elements instance)
 {
 	
 	if (!params.size())
@@ -196,7 +196,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			{
 				if (!col) throw - 1;
 				int frontSquare = returnSquare(row, col - 1);
-				enemyBoard.replace(frontSquare, 2, miss);
+				enemyBoard.replace(frontSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -207,7 +207,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			{
 				if (shipLong + col == 10) throw - 1;
 				int backSquare = returnSquare(row, shipLong + col);
-				enemyBoard.replace(backSquare, 2, miss);
+				enemyBoard.replace(backSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -220,7 +220,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 				if (i == -1 && !col) throw - 1;
 				if (i > 0 && col == 9) throw - 1;
 				int upperSquare = returnSquare(row - 1, col + i);
-				enemyBoard.replace(upperSquare, 2, miss);
+				enemyBoard.replace(upperSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -232,7 +232,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 				if (i == -1 && !col) throw - 1;
 				if (i > 0 && col == 9) throw - 1;
 				int lowerSquare = returnSquare(row + 1, col + i);
-				enemyBoard.replace(lowerSquare, 2, miss);
+				enemyBoard.replace(lowerSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -249,7 +249,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			try
 			{
 				int frontSquare = returnSquare(row -1, col);
-				enemyBoard.replace(frontSquare, 2, miss);
+				enemyBoard.replace(frontSquare, 2, instance.miss);
 			}
 			catch (std::exception& )
 			{
@@ -259,7 +259,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			try
 			{
 				int backSquare = returnSquare(row + shipLong, col);
-				enemyBoard.replace(backSquare, 2, miss);
+				enemyBoard.replace(backSquare, 2, instance.miss);
 			}
 			catch (std::exception&)
 			{
@@ -270,7 +270,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			{
 				if (!col) throw - 1;
 				int leftSquare = returnSquare(row + i, col - 1);
-				enemyBoard.replace(leftSquare, 2, miss);
+				enemyBoard.replace(leftSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -284,7 +284,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 			{
 				if (col  == 9) throw - 1;
 				int rightSquare = returnSquare(row + i, col + 1);
-				enemyBoard.replace(rightSquare, 2, miss);
+				enemyBoard.replace(rightSquare, 2, instance.miss);
 			}
 			catch (int)
 			{
@@ -299,7 +299,7 @@ bool destroyShip(std::vector<int> params, std::string &enemyBoard)
 	return true;
 }
 
-void sightMovement(std::string enemyBoard, int square)
+void sightMovement(std::string enemyBoard, int square, Elements instance)
 {
 	std::vector <int> coords = returnCoordinates(square);
 	int col = coords[0];
@@ -314,7 +314,7 @@ void sightMovement(std::string enemyBoard, int square)
 			char prevValue1 = enemyBoard[square];
 			char prevValue2 = enemyBoard[square + 1];
 			std::string prevValue = { prevValue1, prevValue2 };
-			enemyBoard.replace(square, 2, sight);
+			enemyBoard.replace(square, 2, instance.sight);
 			system("cls");
 			
 			if (!i)
@@ -356,7 +356,7 @@ void sightMovement(std::string enemyBoard, int square)
 			char prevValue1 = enemyBoard[square];
 			char prevValue2 = enemyBoard[square + 1];
 			std::string prevValue = { prevValue1, prevValue2 };
-			enemyBoard.replace(square, 2, sight);
+			enemyBoard.replace(square, 2, instance.sight);
 			system("cls");
 			
 			if (!i)
@@ -392,16 +392,16 @@ void sightMovement(std::string enemyBoard, int square)
 	}
 }
 
-void hitShip(int square, std::string &board, std::string &enemyBoard)
+void hitShip(int square, std::string &board, std::string &enemyBoard, Elements instance)
 {
-	board.replace(square, 2, destroyedShipElement);
-	enemyBoard.replace(square, 2, destroyedShipElement);
+	board.replace(square, 2, instance.destroyedShipElement);
+	enemyBoard.replace(square, 2, instance.destroyedShipElement);
 }
 
-void missed(int square, std::string& board, std::string& enemyBoard)
+void missed(int square, std::string& board, std::string& enemyBoard, Elements instance)
 {
-	board.replace(square, 2, miss);
-	enemyBoard.replace(square, 2, miss);
+	board.replace(square, 2, instance.miss);
+	enemyBoard.replace(square, 2, instance.miss);
 }
 
 bool isCorrectAim(int row, int col, std::string board)
@@ -496,42 +496,42 @@ std::vector<int> aim(std::string& board)
 	return coordinates;
 }
 
-void userFireOnSquare(bool& partyOver, bool& userSaveGame, bool& saveload, std::vector<std::vector <int> >&compShips, std::string &computerBoard, std::string &enemyBoard, std::string& whoseTurn, std::string& whoseNext)
+void userFireOnSquare(Elements instance, User& player, Bot& bot, Game& game)
 {
 	PlaySound(0, 0, 0);
 	    bool miss = false;
 
 		while (!miss)
 		{
-			declareTurn(whoseTurn);
+			declareTurn(game.whoseTurn);
 			Sleep(2000);
 			system("cls");
-			std::vector<int> coords = aim(enemyBoard);
+			std::vector<int> coords = aim(player.enemyBoard);
 			int row = coords[1];
 			int col = coords[0];
 			int square = returnSquare(row, col);
 
-			if (computerBoard[square] != ' ')
+			if (bot.board[square] != ' ')
 			{
-				sightMovement(enemyBoard, square);
-				int hit = hitShip(square, compShips);
-				hitShip(square, computerBoard, enemyBoard);
-				destroyShip(checkShip(hit, compShips, false), enemyBoard);
+				sightMovement(player.enemyBoard, square, instance);
+				int hit = hitShip(square, bot.ships);
+				hitShip(square, bot.board, player.enemyBoard, instance);
+				destroyShip(checkShip(hit, bot.ships, false), player.enemyBoard, instance);
 			}
 			else
 			{
-				sightMovement(enemyBoard, square);
-				missed(square, computerBoard, enemyBoard);
-				swapNames(whoseTurn, whoseNext);
+				sightMovement(player.enemyBoard, square, instance);
+				missed(square, bot.board, player.enemyBoard, instance);
+				swapNames(game.whoseTurn, game.whoseNext);
 				miss = true;
 			}
 			system("cls");
-			if (!compShips.size()) break;
-			showBoard(enemyBoard);
-			awaitPause(partyOver, userSaveGame);
-			if (partyOver)
+			if (!bot.ships.size()) break;
+			showBoard(player.enemyBoard);
+			awaitPause(game.partyOver, player);
+			if (game.partyOver)
 			{
-				saveload = false;
+				game.saveLoad = false;
 				break;
 			}
 			system("cls");
@@ -706,7 +706,7 @@ void setBotAiming(bool& botAiming, std::string botName)
 	}
 }
 
-std::vector<char> menu(bool& bot1Aiming, bool& bot2Aiming, bool &isGame, std::string bot1name, std::string bot2name, std::string& userName, std::string& whoseTurn, std::string& whoseNext)
+std::vector<char> menu(Bot& bot1, Bot& bot2, User& player, Game& game)
 {
 	PlaySound(TEXT("./sound/menu.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	std::vector<char> players = { '0', '0' };
@@ -717,41 +717,41 @@ std::vector<char> menu(bool& bot1Aiming, bool& bot2Aiming, bool &isGame, std::st
 	getStart(start);
 	if (start == '2')
 	{
-		isGame = false;
+		game.isGame = false;
 		system("cls");
 		return players;
 	}
 	else
 	{
 		system("cls");
-		choosePlayers(firstPlayer, secondPlayer, userName, bot1name, bot2name);
+		choosePlayers(firstPlayer, secondPlayer, player.name, bot1.name, bot2.name);
 		switch (firstPlayer)
 		{
 		case '1':
-			whoseTurn = userName;
+			game.whoseTurn = player.name;
 			break;
 		case '2':
-			whoseTurn = bot1name;
-			setBotAiming(bot1Aiming, bot1name);
+			game.whoseTurn = bot1.name;
+			setBotAiming(bot1.aim, bot1.name);
 			break;
 		case '3':
-			whoseTurn = bot2name;
-			setBotAiming(bot2Aiming, bot2name);
+			game.whoseTurn = bot2.name;
+			setBotAiming(bot2.aim, bot2.name);
 			break;
 		}
 
 		switch (secondPlayer)
 		{
 		case '1':
-			whoseNext = userName;
+			game.whoseNext = player.name;
 			break;
 		case '2':
-			whoseNext = bot1name;
-			setBotAiming(bot1Aiming, bot1name);
+			game.whoseNext = bot1.name;
+			setBotAiming(bot1.aim, bot1.name);
 			break;
 		case '3':
-			whoseNext = bot2name;
-			setBotAiming(bot2Aiming, bot2name);
+			game.whoseNext = bot2.name;
+			setBotAiming(bot2.aim, bot2.name);
 			break;
 		}
 		players[0] = firstPlayer;
@@ -802,7 +802,7 @@ void showUserBoardBeforeGame(std::string& board)
 	system("cls");
 }
 
-void pause(bool &partyOver, bool& userSaveGame)
+void pause(bool &partyOver, User& player)
 {
 	system("cls");
 	char isContinue;
@@ -832,13 +832,13 @@ void pause(bool &partyOver, bool& userSaveGame)
 		}
 		if (saveGame == '1')
 		{
-			userSaveGame = true;
+			player.saveGame = true;
 		}
 		
 	}
 }
 
-void awaitPause(bool& partyOver, bool& userSaveGame)
+void awaitPause(bool& partyOver, User& player)
 {
 	char isPause;
 	std::cout << "\x1b[32m press P to pause or press Enter to continue\n\x1b[0m";
@@ -852,7 +852,7 @@ void awaitPause(bool& partyOver, bool& userSaveGame)
 	}
 	if (isPause == 'p' || isPause == 'P')
 	{
-		pause(partyOver, userSaveGame);
+		pause(partyOver, player);
 	}
 }
 
@@ -918,3 +918,205 @@ void showIfSaveDeleted()
 	system("cls");
 }
 
+void initPlayer(User& player)
+{
+	player.isPlay = true;
+	player.board = field();
+	player.enemyBoard = field();
+}
+
+void initBot(Bot& bot, Game& game, Elements& instance)
+{
+	bot.isPlay = true;
+	bot.board = field();
+	bot.enemyBoard = field();
+	bot.ships = botFillBoard(game, bot.board, instance);
+}
+
+void playerReady(User& player, Game& game, Elements instance)
+{
+	initPlayer(player);
+
+	if (userPlaceShips())
+	{
+		system("cls");
+		fillBoard(game, player, instance);
+	}
+	else
+	{
+		system("cls");
+		player.ships = botFillBoard(game, player.board, instance);
+	}
+	showUserBoardBeforeGame(player.board);
+}
+
+void introduce(User& player, Bot& bot1, Bot& bot2, Game& game)
+{
+	showDisclaimer();
+	preloadSave(game.isSaved);
+
+	if (game.isSaved)
+	{
+		game.saveLoad = isLoadsave();
+		if (game.saveLoad)
+		{
+			globalGet(player, bot1, bot2, game);
+		}
+	}
+}
+
+void partyPrepare(User& player, Bot& bot1, Bot& bot2, Game& game, Elements instance)
+{
+	game.partyOver = false;
+	if (!game.saveLoad)
+	{
+		game.players = menu(bot1, bot2, player, game);
+
+		switch (game.players[0])
+		{
+		case '0':
+			system("cls");
+			break;
+		case '1':
+			playerReady(player, game, instance);
+			break;
+		case '2':
+			initBot(bot1, game, instance);
+			break;
+		case '3':
+			initBot(bot2, game, instance);
+			break;
+		}
+
+		switch (game.players[1])
+		{
+		case '1':
+			playerReady(player, game, instance);
+			break;
+		case '2':
+			initBot(bot1, game, instance);
+			break;
+		case '3':
+			initBot(bot2, game, instance);
+			break;
+		}
+	}
+}
+
+void party(User& player, Bot& bot1, Bot& bot2, Elements instance, Game& game)
+{
+	system("cls");
+	if (!game.isGame) return;
+
+	int bot = 0;
+
+	if (player.isPlay == true)
+	{
+		bot = bot1.isPlay ? 1 : 2;
+	}
+	else
+	{
+		bot = 3;
+	}
+	
+	if (bot == 1)
+	{
+		while (1)
+		{
+			if (game.whoseTurn == player.name)
+			{
+				userFireOnSquare(instance, player, bot1, game);
+				if (!bot1.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+
+			if (game.whoseTurn == bot1.name)
+			{
+				botFireOnSquare(instance, player, bot1, game, player.ships, player.board);
+				if (!player.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+		}
+	}
+	else if (bot == 2)
+	{
+		while (1)
+		{
+			if (game.whoseTurn == player.name)
+			{
+				userFireOnSquare(instance, player, bot2, game);
+				if (!bot2.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+
+			if (game.whoseTurn == bot2.name)
+			{
+				botFireOnSquare(instance, player, bot2, game, player.ships, player.board);
+				if (!player.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		while (1)
+		{
+			if (game.whoseTurn == bot1.name)
+			{
+				botFireOnSquare(instance, player, bot1, game, bot2.ships, bot2.board);
+				if (!bot2.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+
+			if (game.whoseTurn == bot2.name)
+			{
+				botFireOnSquare(instance, player, bot2, game, bot1.ships, bot1.board);
+				if (!bot1.ships.size()) break;
+				if (game.partyOver && !player.saveGame) break;
+				if (game.partyOver && player.saveGame)
+				{
+					globalSave(player, bot1, bot2, game);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void gameFinished(User& player, Bot& bot1, Bot& bot2, Game& game)
+{
+	if (!game.isGame) return;
+	if (!game.partyOver)
+	{
+		endParty(game.whoseTurn, player.name);
+		game.saveLoad = false;
+		player.isPlay = false;
+		bot1.isPlay = false;
+		bot2.isPlay = false;
+	}
+}

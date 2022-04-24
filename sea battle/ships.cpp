@@ -1,63 +1,63 @@
 #include "ships.h"
 
-bool isShip(int shipType)
+bool isShip(Game& game, int shipType)
 {
-	if (shipType == 0 && ships[shipType] == 4)
+	if (shipType == 0 && game.ships[shipType] == 4)
 	{
 		return false;
 	}
 
-	if (shipType == 1 && ships[shipType] == 3)
+	if (shipType == 1 && game.ships[shipType] == 3)
 	{
 		return false;
 	}
 
-	if (shipType == 2 && ships[shipType] == 2)
+	if (shipType == 2 && game.ships[shipType] == 2)
 	{
 		return false;
 	}
-	if (shipType == 3 && ships[shipType] == 1)
+	if (shipType == 3 && game.ships[shipType] == 1)
 	{
 		return false;
 	}
 	return true;
 }
 
-void shipCount(int shipType)
+void shipCount(Game& game)
 {
-	switch (shipType)
+	switch (game.ship[0])
 	{
 	case 1:
-		ships[0]++;
+		game.ships[0]++;
 		break;
 	case 2:
-		ships[1]++;
+		game.ships[1]++;
 		break;
 	case 3:
-		ships[2]++;
+		game.ships[2]++;
 		break;
 	case 4:
-		ships[3]++;
+		game.ships[3]++;
 		break;
 	}
 }
 
-bool shipsIsOver()
+bool shipsIsOver(Game& game)
 {
-	if (ships[0] == 4 && ships[1] == 3 && ships[2] == 2 && ships[3] == 1)
+	if (game.ships[0] == 4 && game.ships[1] == 3 && game.ships[2] == 2 && game.ships[3] == 1)
 	{
-		clearShips(ships);
+		clearShips(game.ships);
 		return true;
 	}
 	return false;
 }
 
-void askShip(std::vector<int>& ship, std::string board)
+void askShip(Game& game, std::string& board, Elements instance)
 {
-	bool isBattleship = isShip(3);
-	bool isCruiser = isShip(2);
-	bool isDestroyer = isShip(1);
-	bool isSubmarine = isShip(0);
+	bool isBattleship = isShip(game, 3);
+	bool isCruiser = isShip(game, 2);
+	bool isDestroyer = isShip(game, 1);
+	bool isSubmarine = isShip(game, 0);
 	char type;
 	char layout;
 
@@ -65,22 +65,22 @@ void askShip(std::vector<int>& ship, std::string board)
 
 	if (isBattleship)
 	{
-		std::cout << "1 - battleship: " << shipElement << ' ' << shipElement << ' ' << shipElement << ' ' << shipElement << "\n\n\t\t\t";
+		std::cout << "1 - battleship: " << instance.shipElement << ' ' << instance.shipElement << ' ' << instance.shipElement << ' ' << instance.shipElement << "\n\n\t\t\t";
 	}
 
 	if (isCruiser)
 	{
-		std::cout << "2 - cruiser: " << shipElement << ' ' << shipElement << ' ' << shipElement << ' ' << "\n\n\t\t\t";
+		std::cout << "2 - cruiser: " << instance.shipElement << ' ' << instance.shipElement << ' ' << instance.shipElement << ' ' << "\n\n\t\t\t";
 	}
 
 	if (isDestroyer)
 	{
-		std::cout << "3 - destroyer: " << shipElement << ' ' << shipElement << "\n\n\t\t\t";
+		std::cout << "3 - destroyer: " << instance.shipElement << ' ' << instance.shipElement << "\n\n\t\t\t";
 	}
 
 	if (isSubmarine)
 	{
-		std::cout << "4 - submarine: " << shipElement << "\n";
+		std::cout << "4 - submarine: " << instance.shipElement << "\n";
 	}
 
 	while (1)
@@ -129,12 +129,12 @@ void askShip(std::vector<int>& ship, std::string board)
 		switch (layout)
 		{
 		case '1':
-			ship[0] = 4;
-			ship[1] = 1;
+			game.ship[0] = 4;
+			game.ship[1] = 1;
 			break;
 		case '2':
-			ship[0] = 4;
-			ship[1] = 0;
+			game.ship[0] = 4;
+			game.ship[1] = 0;
 			break;
 		}
 		break;
@@ -142,12 +142,12 @@ void askShip(std::vector<int>& ship, std::string board)
 		switch (layout)
 		{
 		case '1':
-			ship[0] = 3;
-			ship[1] = 1;
+			game.ship[0] = 3;
+			game.ship[1] = 1;
 			break;
 		case '2':
-			ship[0] = 3;
-			ship[1] = 0;
+			game.ship[0] = 3;
+			game.ship[1] = 0;
 			break;
 		}
 		break;
@@ -155,28 +155,21 @@ void askShip(std::vector<int>& ship, std::string board)
 		switch (layout)
 		{
 		case '1':
-			ship[0] = 2;
-			ship[1] = 1;
+			game.ship[0] = 2;
+			game.ship[1] = 1;
 			break;
 		case '2':
-			ship[0] = 2;
-			ship[1] = 0;
+			game.ship[0] = 2;
+			game.ship[1] = 0;
 			break;
 		}
 		break;
 	case '4':
-		ship[0] = 1;
-		ship[1] = 1;
+		game.ship[0] = 1;
+		game.ship[1] = 1;
 		break;
 	}
-	shipCount(ship[0]);
+	shipCount(game);
 }
 
-std::vector<int> getShip(std::string board)
-{
-	std::vector <int> ship{ 0,0 };
-	askShip(ship, board);
-
-	return ship;
-}
 

@@ -1,14 +1,14 @@
 #include "botLogic.h"
 
-void chooseShip(std::vector<int>& ship)
+void chooseShip(Game& game)
 {
-	ship = { 0, 0 };
+	game.ship = { 0, 0 };
 
 	int shipType = randomizer(1, 4);
 
-	if (!isShip(shipType - 1))
+	if (!isShip(game, shipType - 1))
 	{
-		while (!isShip(shipType - 1))
+		while (!isShip(game, shipType - 1))
 		{
 			shipType = randomizer(1, 4);
 		}
@@ -25,10 +25,10 @@ void chooseShip(std::vector<int>& ship)
 		shipLayout = randomizer(0, 1);
 	}
 
-	ship[0] = shipType;
-	ship[1] = shipLayout;
+	game.ship[0] = shipType;
+	game.ship[1] = shipLayout;
 
-	shipCount(ship[0]);
+	shipCount(game);
 }
 
 std::vector<int> chooseCoord(std::vector<int>& ship, std::string& board)
@@ -82,14 +82,14 @@ std::vector<int> chooseCoord(std::vector<int>& ship, std::string& board)
 	return coordinates;
 }
 
-void placeBotship(std::vector<int> ship, std::string& board, std::vector<std::vector<int> > &ships)
+void placeBotship(std::vector<int> ship, std::string& board, std::vector<std::vector<int> > &ships, Elements instance)
 {
 	int shipLong = ship[0];
-int shipHorizontalLayout = ship[1];
-std::vector<int> newShip;
-std::vector<int> coordinates = chooseCoord(ship, board);
-int col = coordinates[0];
-int row = coordinates[1];
+	int shipHorizontalLayout = ship[1];
+	std::vector<int> newShip;
+	std::vector<int> coordinates = chooseCoord(ship, board);
+	int col = coordinates[0];
+	int row = coordinates[1];
 
 if (!shipHorizontalLayout)
 {
@@ -99,7 +99,7 @@ if (!shipHorizontalLayout)
 	for (int i = 0; i < shipLong; i++)
 	{
 		int square = returnSquare(row, col);
-		board.replace(square, 2, shipElement);
+		board.replace(square, 2, instance.shipElement);
 		row += 1;
 		newShip.push_back(square);
 	}
@@ -112,7 +112,7 @@ else
 	for (int i = 0; i < shipLong; i++)
 	{
 		int square = returnSquare(row, col);
-		board.replace(square, 2, shipElement);
+		board.replace(square, 2, instance.shipElement);
 		col += 1;
 		newShip.push_back(square);
 	}
@@ -121,13 +121,13 @@ else
 ships.push_back(newShip);
 }
 
-std::vector<std::vector<int> > botFillBoard(std::string& board)
+std::vector<std::vector<int> > botFillBoard(Game& game, std::string& board, Elements instance)
 {
 	std::vector<std::vector<int> > ships;
-	while (!shipsIsOver())
+	while (!shipsIsOver(game))
 	{
-		chooseShip(ship);
-		placeBotship(ship, board, ships);
+		chooseShip(game);
+		placeBotship(game.ship, board, ships, instance);
 	}
 	return ships;
 }
@@ -590,29 +590,29 @@ std::vector<int> finishing(std::vector<int>& coords, std::string& botEnemyBoard)
 	return coordinates;
 }
 
-void botFireOnSquare(bool botAiming,bool& userSaveGame, bool& saveload, bool isUserPlay, bool& partyOver, std::vector<std::vector<int>> &enemyShips, std::vector<std::vector<int>>& compShips, std::string &enemyBoard, std::string &botEnemyBoard, std::vector<int>& coordinates, std::string& whoseTurn, std::string& whoseNext)
+void botFireOnSquare(Elements instance, User& player, Bot& bot, Game& game, std::vector<std::vector<int>> &enemyShips, std::string &enemyBoard)
 {
 		bool miss = false;
 
 		while (!miss)
 		{
-			declareTurn(whoseTurn);
+			declareTurn(game.whoseTurn);
 			Sleep(2000);
 			system("cls");
 			std::vector<int> coords;
 			int row;
 			int col;
 			int square;
-			if (coordinates[0] == -1 || !botAiming)
+			if (bot.coordsFinishing[0] == -1 || !bot.aim)
 			{
-				coords = botAim(botEnemyBoard);
+				coords = botAim(bot.enemyBoard);
 				row = coords[1];
 				col = coords[0];
 				square = returnSquare(row, col);
 			}
 			else
 			{
-				coords = finishing(coordinates, botEnemyBoard);
+				coords = finishing(bot.coordsFinishing, bot.enemyBoard);
 				row = coords[1];
 				col = coords[0];
 				square = returnSquare(row, col);
@@ -620,49 +620,46 @@ void botFireOnSquare(bool botAiming,bool& userSaveGame, bool& saveload, bool isU
 			
 			if (enemyBoard[square] != ' ')
 			{
-				sightMovement(enemyBoard, square);
+				sightMovement(enemyBoard, square, instance);
 				int hit = hitShip(square, enemyShips);
-				hitShip(square, enemyBoard, botEnemyBoard);
-				bool isDestroyed = destroyShip(checkShip(hit, enemyShips, isUserPlay), botEnemyBoard);
+				hitShip(square, enemyBoard, bot.enemyBoard, instance);
+				bool isDestroyed = destroyShip(checkShip(hit, enemyShips, player.isPlay), bot.enemyBoard, instance);
 				if (!isDestroyed)
 				{
-					coordinates[0] = col;
-					coordinates[1] = row;
-					if (!coordinates[2])
+					bot.coordsFinishing[0] = col;
+					bot.coordsFinishing[1] = row;
+					if (!bot.coordsFinishing[2])
 					{
-						coordinates[3] = col;
-						coordinates[2]++;
+						bot.coordsFinishing[3] = col;
+						bot.coordsFinishing[2]++;
 					}
 					else
 					{
-						coordinates[2] = coordinates[0] == coordinates[3] ? 3 : 2;
+						bot.coordsFinishing[2] = bot.coordsFinishing[0] == bot.coordsFinishing[3] ? 3 : 2;
 					}
 					
 				}
 
 				else
 				{
-					coordinates[0] = -1;
-					coordinates[1] = 0;
-					coordinates[2] = 0;
-					coordinates[3] = 0;
+					bot.clearCoordsFinishing();
 				}
 				
 			}
 			else
 			{
-				sightMovement(enemyBoard, square);
-				missed(square, enemyBoard, botEnemyBoard);
-				swapNames(whoseTurn, whoseNext);
+				sightMovement(enemyBoard, square, instance);
+				missed(square, enemyBoard, bot.enemyBoard, instance);
+				swapNames(game.whoseTurn, game.whoseNext);
 				miss = true;
 			}
 			system("cls");
 			if (!enemyShips.size()) break;
 			showBoard(enemyBoard);
-			awaitPause(partyOver, userSaveGame);
-			if (partyOver)
+			awaitPause(game.partyOver, player);
+			if (game.partyOver)
 			{
-				saveload = false;
+				game.saveLoad = false;
 				break;
 			}
 			system("cls");
