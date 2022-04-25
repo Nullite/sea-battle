@@ -1,4 +1,4 @@
-﻿#include "board.h"
+﻿#include "programm.h"
 
 int main()
 {

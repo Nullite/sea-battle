@@ -139,20 +139,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="board.cpp" />
-    <ClCompile Include="botLogic.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="programm.cpp" />
     <ClCompile Include="save.cpp" />
+    <ClCompile Include="board.cpp" />
     <ClCompile Include="ships.cpp" />
+    <ClCompile Include="botLogic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="game.h" />
+    <ClInclude Include="interface.h" />
+    <ClInclude Include="ships.h" />
+    <ClInclude Include="programm.h" />
+    <ClInclude Include="save.h" />
+    <ClInclude Include="structs.h" />
     <ClInclude Include="board.h" />
     <ClInclude Include="botLogic.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="save.h" />
-    <ClInclude Include="ships.h" />
-    <ClInclude Include="variables.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
