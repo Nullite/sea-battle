@@ -581,7 +581,7 @@ void userFireOnSquare(Elements instance, User& player, Bot& bot, Game& game)
 			sightMovement(player.enemyBoard, square, instance);
 			int hit = hitShip(square, bot.ships);
 			hitShip(square, bot.board, player.enemyBoard, instance);
-			destroyShip(checkShip(hit, bot.ships, false), player.enemyBoard, instance);
+			destroyShip(checkShip(hit, bot.ships, false), player.enemyBoard, instance, game, bot);
 		}
 		else
 		{
@@ -609,9 +609,9 @@ void setBotAiming(bool& botAiming, std::string botName)
 {
 	system("cls");
 	char aim;
-	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\x1b[34mChoose " << botName << "'s aiming level:\n"
-		<< "\t\t\t\t\t\t1 - random fire\n"
-		<< "\t\t\t\t\t\t2 - aimed fire\x1b[0m\n";
+	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\x1b[34mChoose " << botName << "'s level:\n"
+		<< "\t\t\t\t\t\t1 - easy\n"
+		<< "\t\t\t\t\t\t2 - hard\x1b[0m\n";
 	while (1)
 	{
 		aim = _getch();
@@ -656,8 +656,8 @@ void sightMovement(std::string enemyBoard, int square, Elements instance)
 	std::vector <int> coords = returnCoordinates(square);
 	int col = coords[0];
 	int row = coords[1];
-	int horizontalMovement = randomizer(0, 1);
-	switch (horizontalMovement)
+	int movement = randomizer(0, 3);
+	switch (movement)
 	{
 	case 0:
 		for (int i = 0; i <= col; i++)
@@ -712,6 +712,89 @@ void sightMovement(std::string enemyBoard, int square, Elements instance)
 			system("cls");
 
 			if (!i)
+			{
+				showBoard(enemyBoard);
+				PlaySound(TEXT("./sound/aiming.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				Sleep(600);
+				system("cls");
+			}
+			if (i == row)
+			{
+				showBoard(enemyBoard);
+				Sleep(800);
+				PlaySound(TEXT("./sound/launch_missile.wav"), NULL, SND_FILENAME);
+				system("color 4F");
+				Sleep(200);
+				system("color 07");
+				PlaySound(TEXT("./sound/explosion.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				enemyBoard.replace(square, 2, { (char)185, (char)204 });
+				system("cls");
+				showBoard(enemyBoard);
+				Sleep(400);
+			}
+			else
+			{
+				showBoard(enemyBoard);
+				PlaySound(TEXT("./sound/aiming.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				Sleep(80);
+				enemyBoard.replace(square, 2, prevValue);
+			}
+		}
+		break;
+
+	case 2:
+		for (int i = 9; i >= col; i--)
+		{
+			int square = returnSquare(i, row);
+			char prevValue1 = enemyBoard[square];
+			char prevValue2 = enemyBoard[square + 1];
+			std::string prevValue = { prevValue1, prevValue2 };
+			enemyBoard.replace(square, 2, instance.sight);
+			system("cls");
+
+			if (i == 9)
+			{
+				showBoard(enemyBoard);
+				PlaySound(TEXT("./sound/aiming.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				Sleep(600);
+				system("cls");
+			}
+			if (i == col)
+			{
+				showBoard(enemyBoard);
+				Sleep(800);
+				PlaySound(TEXT("./sound/launch_missile.wav"), NULL, SND_FILENAME);
+				system("color 4F");
+				Sleep(200);
+				system("color 07");
+				PlaySound(TEXT("./sound/explosion.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				enemyBoard.replace(square, 2, { (char)185, (char)204 });
+				system("cls");
+				showBoard(enemyBoard);
+				Sleep(400);
+			}
+			else
+			{
+				showBoard(enemyBoard);
+				PlaySound(TEXT("./sound/aiming.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				Sleep(80);
+				enemyBoard.replace(square, 2, prevValue);
+			}
+
+		}
+		break;
+
+	case 3:
+		for (int i = 9; i >= row; i--)
+		{
+			int square = returnSquare(col, i);
+			char prevValue1 = enemyBoard[square];
+			char prevValue2 = enemyBoard[square + 1];
+			std::string prevValue = { prevValue1, prevValue2 };
+			enemyBoard.replace(square, 2, instance.sight);
+			system("cls");
+
+			if (i == 9)
 			{
 				showBoard(enemyBoard);
 				PlaySound(TEXT("./sound/aiming.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -863,21 +946,33 @@ void pause(bool& partyOver, User& player)
 	}
 }
 
-void endParty(std::string& whoseTurn, std::string userName)
+void endParty(std::string& whoseTurn, std::string userName, bool userPlay, Bot& bot1, Bot& bot2)
 {
 	system("cls");
 
 	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\x1b[33m" << whoseTurn << " wins!!!\x1b[0m\n";
 	Sleep(1000);
-	if (whoseTurn == userName)
+	if (whoseTurn == userName || !userPlay)
 	{
 		PlaySound(TEXT("./sound/applause.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 	else
 	{
 		PlaySound(TEXT("./sound/sad.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		Sleep(5000);
+		system("cls");
+		if (bot1.isPlay)
+		{
+			showBoard(bot1.board);
+		}
+		else
+		{
+			showBoard(bot2.board);
+		}
+		std::cout << "\n\n" << "press any key to continue\n";
+		char cont = _getch();
+		return;
 	}
-
 
 	Sleep(5000);
 	system("cls");

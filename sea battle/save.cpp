@@ -119,6 +119,7 @@ void saveVec(User player, Bot bot1, Bot bot2) {
 		save << '\n';
 	}
 
+
 	for (int i = 0; i < bot1.coordsFinishing.size(); i++)
 	{
 		save << bot1.coordsFinishing[i] << '\n';
@@ -127,6 +128,122 @@ void saveVec(User player, Bot bot1, Bot bot2) {
 	for (int i = 0; i < bot2.coordsFinishing.size(); i++)
 	{
 		save << bot2.coordsFinishing[i] << '\n';
+	}
+	
+	for (int i = 0; i < bot1.tact.enemyShips.size(); i++)
+	{
+		save << bot1.tact.enemyShips[i] << '\n';
+	}
+
+	for (int i = 0; i < bot2.tact.enemyShips.size(); i++)
+	{
+		save << bot2.tact.enemyShips[i] << '\n';
+	}
+
+	if (bot1.tact.squearsIfBattleship.size())
+	{
+		save << bot1.tact.squearsIfBattleship.size() << '\n';
+		for (int i = 0; i < bot1.tact.squearsIfBattleship.size(); i++)
+		{
+		save << bot1.tact.squearsIfBattleship[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+
+	if (bot2.tact.squearsIfBattleship.size())
+	{
+		save << bot2.tact.squearsIfBattleship.size() << '\n';
+		for (int i = 0; i < bot2.tact.squearsIfBattleship.size(); i++)
+		{
+			save << bot2.tact.squearsIfBattleship[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+	if (bot1.tact.squearsIfCruiser.size())
+	{
+		save << bot1.tact.squearsIfCruiser.size() << '\n';
+		for (int i = 0; i < bot1.tact.squearsIfCruiser.size(); i++)
+		{
+			save << bot1.tact.squearsIfCruiser[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+
+	if (bot2.tact.squearsIfCruiser.size())
+	{
+		save << bot2.tact.squearsIfCruiser.size() << '\n';
+		for (int i = 0; i < bot2.tact.squearsIfCruiser.size(); i++)
+		{
+			save << bot2.tact.squearsIfCruiser[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+	if (bot1.tact.squearsIfDestroyer.size())
+	{
+		save << bot1.tact.squearsIfDestroyer.size() << '\n';
+		for (int i = 0; i < bot1.tact.squearsIfDestroyer.size(); i++)
+		{
+			save << bot1.tact.squearsIfDestroyer[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+	if (bot2.tact.squearsIfDestroyer.size())
+	{
+		save << bot2.tact.squearsIfDestroyer.size() << '\n';
+		for (int i = 0; i < bot2.tact.squearsIfDestroyer.size(); i++)
+		{
+			save << bot2.tact.squearsIfDestroyer[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+	if (bot1.tact.remainingSquears.size())
+	{
+		save << bot1.tact.remainingSquears.size() << '\n';
+		for (int i = 0; i < bot1.tact.remainingSquears.size(); i++)
+		{
+			save << bot1.tact.remainingSquears[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
+	}
+
+	if (bot2.tact.remainingSquears.size())
+	{
+		save << bot2.tact.remainingSquears.size() << '\n';
+		for (int i = 0; i < bot2.tact.remainingSquears.size(); i++)
+		{
+			save << bot2.tact.remainingSquears[i] << '\n';
+		}
+	}
+	else
+	{
+		save << 0 << '\n';
 	}
 
 	save.close();
@@ -250,6 +367,7 @@ void getStrings(User& player, Bot& bot1, Bot& bot2, Game& game)
 
 void getVec(User& player, Bot& bot1, Bot& bot2)
 {
+	int size;
 	std::string temp;
 	std::ifstream save("saveVec.sb");
 	getline(save, temp);
@@ -325,21 +443,143 @@ void getVec(User& player, Bot& bot1, Bot& bot2)
 				tempVec.erase(tempVec.begin(), tempVec.end());
 			}
 		}
-	}
-	
+	}	
 
 	for (int i = 0; i < 4; i++)
 	{
 		getline(save, temp);
 		bot1.coordsFinishing[i] = (stoi(temp));
 	}
-
 	
 	for (int i = 0; i < 4; i++)
 	{
 		getline(save, temp);
 		bot2.coordsFinishing[i] = (stoi(temp));
 	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		getline(save, temp);
+		bot1.tact.enemyShips[i] = (stoi(temp));
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		getline(save, temp);
+		bot2.tact.enemyShips[i] = (stoi(temp));
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot1.tact.squearsIfBattleship.erase(bot1.tact.squearsIfBattleship.begin(), bot1.tact.squearsIfBattleship.end());
+
+	if ( size != 0)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot1.tact.squearsIfBattleship.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot2.tact.squearsIfBattleship.erase(bot2.tact.squearsIfBattleship.begin(), bot2.tact.squearsIfBattleship.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot2.tact.squearsIfBattleship.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot1.tact.squearsIfCruiser.erase(bot1.tact.squearsIfCruiser.begin(), bot1.tact.squearsIfCruiser.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot1.tact.squearsIfCruiser.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot2.tact.squearsIfCruiser.erase(bot2.tact.squearsIfCruiser.begin(), bot2.tact.squearsIfCruiser.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot2.tact.squearsIfCruiser.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot1.tact.squearsIfDestroyer.erase(bot1.tact.squearsIfDestroyer.begin(), bot1.tact.squearsIfDestroyer.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot1.tact.squearsIfDestroyer.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot2.tact.squearsIfDestroyer.erase(bot2.tact.squearsIfDestroyer.begin(), bot2.tact.squearsIfDestroyer.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot2.tact.squearsIfDestroyer.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot1.tact.remainingSquears.erase(bot1.tact.remainingSquears.begin(), bot1.tact.remainingSquears.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot1.tact.remainingSquears.push_back(stoi(temp));
+		}
+	}
+
+	getline(save, temp);
+	size = stoi(temp);
+	bot2.tact.remainingSquears.erase(bot2.tact.remainingSquears.begin(), bot2.tact.remainingSquears.end());
+
+	if (size != 0)
+	{
+
+		for (int i = 0; i < size; i++)
+		{
+			getline(save, temp);
+			bot2.tact.remainingSquears.push_back(stoi(temp));
+		}
+	}
+
 	save.close();
 }
 

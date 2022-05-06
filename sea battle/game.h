@@ -13,3 +13,4 @@ void swapNames(std::string& whoseTurn, std::string& whoseNext);
 void initPlayer(User& player);
 void playerReady(User& player, Game& game, Elements instance);
 void initBot(Bot& bot, Game& game, Elements& instance);
+void checkBotEnemyShips(Bot& bot, int shipType);

@@ -126,7 +126,7 @@ void gameFinished(User& player, Bot& bot1, Bot& bot2, Game& game)
 	if (!game.isGame) return;
 	if (!game.partyOver)
 	{
-		endParty(game.whoseTurn, player.name);
+		endParty(game.whoseTurn, player.name, player.isPlay, bot1, bot2);
 		game.saveLoad = false;
 		player.isPlay = false;
 		bot1.isPlay = false;

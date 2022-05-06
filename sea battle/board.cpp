@@ -130,15 +130,39 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 		{
 			try
 			{
-				int square = returnSquare(row + i, col);
-				int leftSquare = returnSquare(row + i, col - 1);
-				int rightSquare = returnSquare(row + i, col + 1);
-
-
-				if (board.at(square) != ' ' || board.at(leftSquare) != ' ' && col || board.at(rightSquare) != ' ' && col != 9)
+				if (col && col != 9)
 				{
-					return false;
+					int square = returnSquare(row + i, col);
+					int leftSquare = returnSquare(row + i, col - 1);
+					int rightSquare = returnSquare(row + i, col + 1);
+
+
+					if (board.at(square) != ' ' || board.at(leftSquare) != ' ' || board.at(rightSquare) != ' ')
+					{
+						return false;
+					}
 				}
+				else if (!col)
+				{
+					int square = returnSquare(row + i, col);
+					int rightSquare = returnSquare(row + i, col + 1);
+
+					if (board.at(square) != ' ' || board.at(rightSquare) != ' ')
+					{
+						return false;
+					}
+				}
+				else
+				{
+					int square = returnSquare(row + i, col);
+					int leftSquare = returnSquare(row + i, col - 1);
+
+					if (board.at(square) != ' ' || board.at(leftSquare) != ' ')
+					{
+						return false;
+					}
+				}
+				
 			}
 			catch (const std::exception&)
 			{

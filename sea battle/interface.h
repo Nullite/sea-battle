@@ -21,6 +21,6 @@ void sightMovement(std::string enemyBoard, int square, Elements instance);
 void choosePlayers(char& firstPlayer, char& secondPlayer, std::string& username, std::string bot1name, std::string bot2name);
 void awaitPause(bool& partyOver, User& player);
 void pause(bool& partyOver, User& player);
-void endParty(std::string& whoseTurn, std::string userName);
+void endParty(std::string& whoseTurn, std::string userName, bool userPlay, Bot& bot1, Bot& bot2);
 void showIfSaved();
 void showIfSaveDeleted();

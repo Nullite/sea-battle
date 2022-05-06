@@ -62,16 +62,234 @@ std::vector<int> chooseCoord(std::vector<int>& ship, std::string& board)
 	return coordinates;
 }
 
-std::vector<int> botAim(std::string& board)
+std::vector<int> botAimIfBattleship(Bot& bot)
+{
+	std::vector<int> coordinates = { -1, 0 };
+	while (bot.tact.squearsIfBattleship.size())
+	{
+		int temp = randomizer(0, bot.tact.squearsIfBattleship.size() - 1);
+		std::vector<int> tempVec = returnCoordinates(bot.tact.squearsIfBattleship.at(temp));
+		coordinates[0] = tempVec[1];
+		coordinates[1] = tempVec[0];
+		bot.tact.squearsIfBattleship.erase(bot.tact.squearsIfBattleship.begin() + temp);
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard)) {
+			if (!bot.tact.enemyShips[3])
+			{
+				if (checkIfAloneSquare(bot, coordinates))
+				{
+					continue;
+				}
+			}
+			break;
+		};
+	}
+	return coordinates;
+}
+
+std::vector<int> botAimIfCruiser(Bot& bot)
+{
+	std::vector<int> coordinates = { -1, 0 };
+	while (bot.tact.squearsIfCruiser.size())
+	{
+		int temp = randomizer(0, bot.tact.squearsIfCruiser.size() - 1);
+		std::vector<int> tempVec = returnCoordinates(bot.tact.squearsIfCruiser.at(temp));
+		coordinates[0] = tempVec[1];
+		coordinates[1] = tempVec[0];
+		bot.tact.squearsIfCruiser.erase(bot.tact.squearsIfCruiser.begin() + temp);
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard)) {
+			if (!bot.tact.enemyShips[3])
+			{
+				if (checkIfAloneSquare(bot, coordinates))
+				{
+					continue;
+				}
+			}
+			break;
+		};
+	}
+	return coordinates;
+}
+
+std::vector<int> botAimIfDestroyer(Bot& bot)
+{
+	std::vector<int> coordinates = { -1, 0 };
+	while (bot.tact.squearsIfDestroyer.size())
+	{
+		int temp = randomizer(0, bot.tact.squearsIfDestroyer.size() - 1);
+		std::vector<int> tempVec = returnCoordinates(bot.tact.squearsIfDestroyer.at(temp));
+		coordinates[0] = tempVec[1];
+		coordinates[1] = tempVec[0];
+		bot.tact.squearsIfDestroyer.erase(bot.tact.squearsIfDestroyer.begin() + temp);
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard)) {
+			if (!bot.tact.enemyShips[3])
+			{
+				if (checkIfAloneSquare(bot, coordinates))
+				{
+					continue;
+				}
+			}
+			break;
+		};
+	}
+	return coordinates;
+}
+
+std::vector<int> botAimIfSubmarine(Bot& bot)
+{
+	std::vector<int> coordinates = { -1, 0 };
+	while (bot.tact.remainingSquears.size())
+	{
+		int temp = randomizer(0, bot.tact.remainingSquears.size() - 1);
+		std::vector<int> tempVec = returnCoordinates(bot.tact.remainingSquears.at(temp));
+		coordinates[0] = tempVec[1];
+		coordinates[1] = tempVec[0];
+		bot.tact.remainingSquears.erase(bot.tact.remainingSquears.begin() + temp);
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard)) {
+			if (!bot.tact.enemyShips[3])
+			{
+				if (checkIfAloneSquare(bot, coordinates))
+				{
+					continue;
+				}
+			}
+			break;
+		};
+	}
+	return coordinates;
+}
+
+std::vector<int> randomFire(Bot& bot)
 {
 	std::vector<int> coordinates = { 0, 0 };
 	while (1)
 	{
-		coordinates[0] = randomizer(0, 9);
-		coordinates[1] = randomizer(0, 9);
-
-		if (isCorrectAim(coordinates[1], coordinates[0], board))
+		int rnd = 0;
+		
+			rnd = randomizer(1, 4);
+			switch (rnd)
+			{
+			case 1:
+				if (bot.tact.squearsIfBattleship.size())
+				{
+					coordinates = botAimIfBattleship(bot);
+				}
+				break;
+			case 2:
+				if (bot.tact.squearsIfCruiser.size())
+				{
+					coordinates = botAimIfCruiser(bot);
+				}
+				break;
+			case 3:
+				if (bot.tact.squearsIfDestroyer.size())
+				{
+					coordinates = botAimIfDestroyer(bot);
+				}			
+				break;
+			case 4:
+				if (bot.tact.remainingSquears.size())
+				{
+					coordinates = botAimIfSubmarine(bot);
+				}
+				break;
+			}
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard))
 		{
+			break;
+		}
+	}
+	return coordinates;
+}
+
+std::vector<int> botAim(Bot& bot)
+{
+	std::vector<int> coordinates = { -1, 0 };
+
+	while (coordinates[0] == -1)
+	{
+		switch (bot.aim)
+		{
+		case true:
+			if (bot.tact.enemyShips[0])
+			{
+				coordinates = botAimIfBattleship(bot);
+				if (coordinates[0] == -1) continue;
+			}
+			else if (bot.tact.enemyShips[1])
+			{
+				switch (bot.tact.squearsIfBattleship.size())
+				{
+				case 0:
+					coordinates = botAimIfCruiser(bot);
+					if (coordinates[0] == -1) continue;
+					break;
+				default:
+					int rnd = randomizer(0, 1);
+					if (rnd)
+					{
+						coordinates = botAimIfCruiser(bot);
+					}
+					else
+					{
+						coordinates = botAimIfBattleship(bot);
+						if (coordinates[0] == -1)
+						{
+							continue;
+						}
+					}
+					break;
+				}
+			}
+			else if (bot.tact.enemyShips[2])
+			{
+				if (bot.tact.squearsIfBattleship.size())
+				{
+					int rnd = randomizer(0, 2);
+					if (rnd == 2)
+					{
+						coordinates = botAimIfDestroyer(bot);
+						if (coordinates[0] == -1) continue;
+					}
+					else if (rnd == 1)
+					{
+						coordinates = botAimIfCruiser(bot);
+						if (coordinates[0] == -1) continue;
+					}
+					else
+					{
+						coordinates = botAimIfBattleship(bot);
+						if (coordinates[0] == -1) continue;
+					}
+				}
+				else if (bot.tact.squearsIfCruiser.size())
+				{
+					int rnd = randomizer(0, 1);
+					if (rnd)
+					{
+						coordinates = botAimIfDestroyer(bot);
+						if (coordinates[0] == -1) continue;
+					}
+					else
+					{
+						coordinates = botAimIfCruiser(bot);
+						if (coordinates[0] == -1) continue;
+					}
+				}
+				else
+				{
+					coordinates = botAimIfDestroyer(bot);
+					if (coordinates[0] == -1) continue;
+				}
+			}
+			else
+			{
+				coordinates = randomFire(bot);
+				if (coordinates[0] == -1) continue;
+			}
+			break;
+
+		case false:
+			coordinates = randomFire(bot);
 			break;
 		}
 	}
@@ -520,6 +738,66 @@ std::vector<int> finishing(std::vector<int>& coords, std::string& botEnemyBoard)
 	return coordinates;
 }
 
+bool checkIfAloneSquare(Bot& bot, std::vector<int>& coordinates)
+{
+	int square = returnSquare(coordinates[0], coordinates[1]);
+	int row = coordinates[0];
+	int col = coordinates[1];
+	int frontSquare;
+	int backSquare;
+	int upperSquare;
+	int downSquare;
+
+	if (col)
+	{
+		frontSquare = returnSquare(row, col - 1);
+		if (bot.enemyBoard.at(frontSquare) == ' ')
+		{
+			return false;
+		}
+	}
+
+	if (col != 9)
+	{
+		backSquare = returnSquare(row, col + 1);
+		if (bot.enemyBoard.at(backSquare) == ' ')
+		{
+			return false;
+		}
+	}
+
+	for (int i = -1; i < 2; i++)
+	{
+		try
+		{
+			upperSquare = returnSquare(row + 1, col + i);
+			if (bot.enemyBoard.at(upperSquare) == ' ')
+			{
+				return false;
+			}
+		}
+		catch (std::exception&)
+		{
+
+		}
+
+		try
+		{
+			downSquare = returnSquare(row - 1, col + i);
+			if (bot.enemyBoard.at(upperSquare) == ' ')
+			{
+				return false;
+			}
+		}
+		catch (std::exception&)
+		{
+
+		}
+	}
+	bot.enemyBoard.replace(square, 2, { (char)126, (char)126 });
+	return true;
+}
+
 void placeBotship(std::vector<int> ship, std::string& board, std::vector<std::vector<int> >& ships, Elements instance)
 {
 	int shipLong = ship[0];
@@ -603,9 +881,9 @@ void botFireOnSquare(Elements instance, User& player, Bot& bot, Game& game, std:
 		int row;
 		int col;
 		int square;
-		if (bot.coordsFinishing[0] == -1 || !bot.aim)
+		if (bot.coordsFinishing[0] == -1)
 		{
-			coords = botAim(bot.enemyBoard);
+			coords = botAim(bot);
 			row = coords[1];
 			col = coords[0];
 			square = returnSquare(row, col);
@@ -623,7 +901,7 @@ void botFireOnSquare(Elements instance, User& player, Bot& bot, Game& game, std:
 			sightMovement(enemyBoard, square, instance);
 			int hit = hitShip(square, enemyShips);
 			hitShip(square, enemyBoard, bot.enemyBoard, instance);
-			bool isDestroyed = destroyShip(checkShip(hit, enemyShips, player.isPlay), bot.enemyBoard, instance);
+			bool isDestroyed = destroyShip(checkShip(hit, enemyShips, player.isPlay), bot.enemyBoard, instance, game, bot);
 			if (!isDestroyed)
 			{
 				bot.coordsFinishing[0] = col;

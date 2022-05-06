@@ -85,3 +85,22 @@ void playerReady(User& player, Game& game, Elements instance)
 	}
 	showUserBoardBeforeGame(player.board);
 }
+
+void checkBotEnemyShips(Bot& bot, int shipType)
+{
+	switch (shipType)
+	{
+	case 1:
+		bot.tact.enemyShips[3]--;
+		break;
+	case 2:
+		bot.tact.enemyShips[2]--;
+		break;
+	case 3:
+		bot.tact.enemyShips[1]--;
+		break;
+	case 4:
+		bot.tact.enemyShips[0]--;
+		break;
+	}
+}

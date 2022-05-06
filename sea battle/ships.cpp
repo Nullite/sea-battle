@@ -30,7 +30,7 @@ std::vector<int> checkShip(int ship, std::vector<std::vector<int>>& ships, bool 
 	return params;
 }
 
-bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements instance)
+bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements instance, Game& game, Bot& bot)
 {
 
 	if (!params.size())
@@ -44,6 +44,10 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 	Sleep(400);
 	system("cls");
 	showDestroyed(shipLong);
+	if (game.whoseTurn == bot.name)
+	{
+		checkBotEnemyShips(bot, shipLong);
+	}
 
 	std::vector<int> coords = returnCoordinates(startSquare);
 	int row = coords[0];
@@ -63,6 +67,10 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 			{
 
 			}
+			catch (std::exception&)
+			{
+
+			}
 
 			try
 			{
@@ -71,6 +79,10 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 				enemyBoard.replace(backSquare, 2, instance.miss);
 			}
 			catch (int)
+			{
+
+			}
+			catch (std::exception&)
 			{
 
 			}
@@ -87,6 +99,11 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 			{
 
 			}
+			catch (std::exception&)
+			{
+
+			}
+
 			try
 			{
 				if (row == 9) throw - 1;
@@ -99,7 +116,10 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 			{
 
 			}
+			catch (std::exception&)
+			{
 
+			}
 		}
 	}
 
