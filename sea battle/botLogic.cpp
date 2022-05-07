@@ -205,7 +205,7 @@ std::vector<int> botAim(Bot& bot)
 {
 	std::vector<int> coordinates = { -1, 0 };
 
-	while (coordinates[0] == -1)
+	while (1)
 	{
 		switch (bot.aim)
 		{
@@ -292,6 +292,7 @@ std::vector<int> botAim(Bot& bot)
 			coordinates = randomFire(bot);
 			break;
 		}
+		if (isCorrectAim(coordinates[0], coordinates[1], bot.enemyBoard)) break;
 	}
 	return coordinates;
 }

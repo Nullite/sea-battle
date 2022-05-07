@@ -18,6 +18,8 @@ int randomizer(int from, int to)
 
 bool isCorrectAim(int row, int col, std::string board)
 {
+	if (col < 0 || row < 0) return false;
+
 	int checkSquare = returnSquare(row, col);
 	try
 	{
