@@ -92,6 +92,7 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 				if (!row) throw - 1;
 				if (i == -1 && !col) throw - 1;
 				if (i > 0 && col == 9) throw - 1;
+				if (col + i > 9) throw - 1;
 				int upperSquare = returnSquare(row - 1, col + i);
 				enemyBoard.replace(upperSquare, 2, instance.miss);
 			}
@@ -109,6 +110,7 @@ bool destroyShip(std::vector<int> params, std::string& enemyBoard, Elements inst
 				if (row == 9) throw - 1;
 				if (i == -1 && !col) throw - 1;
 				if (i > 0 && col == 9) throw - 1;
+				if (col + i > 9) throw - 1;
 				int lowerSquare = returnSquare(row + 1, col + i);
 				enemyBoard.replace(lowerSquare, 2, instance.miss);
 			}

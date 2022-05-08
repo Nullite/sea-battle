@@ -95,8 +95,10 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 			}
 			try
 			{
-				int upperSquare = returnSquare(row - 1, col + i);
+				if (!row) continue;
 
+				int upperSquare = returnSquare(row - 1, col + i);
+			
 				if (board.at(upperSquare) != ' ')
 				{
 					return false;
@@ -109,19 +111,24 @@ bool checkIfCorrectPlace(int col, int row, std::string& board, int shipLong, int
 			}
 			try
 			{
-				int lowerSquare = returnSquare(row + 1, col + i);
+				if (row == 9) continue;
 
+				int lowerSquare = returnSquare(row + 1, col + i);
+				
 				if (board.at(lowerSquare) != ' ')
 				{
 					return false;
 				}
 
 			}
+			catch (int)
+			{
+
+			}
 			catch (const std::exception&)
 			{
 
 			}
-
 		}
 	}
 	else
