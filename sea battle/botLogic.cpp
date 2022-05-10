@@ -292,7 +292,10 @@ std::vector<int> botAim(Bot& bot)
 			coordinates = randomFire(bot);
 			break;
 		}
-		if (isCorrectAim(coordinates[0], coordinates[1], bot.enemyBoard)) break;
+		if (isCorrectAim(coordinates[1], coordinates[0], bot.enemyBoard))
+		{
+			break;
+		}
 	}
 	return coordinates;
 }
@@ -339,13 +342,28 @@ std::vector<int> finishing(std::vector<int>& coords, std::string& botEnemyBoard)
 			else
 			{
 				newCol--;
-				while (!isCorrectAim(newRow, newCol, botEnemyBoard))
+				int square = returnSquare(newRow, newCol);
+				if (botEnemyBoard.at(square) != (char)126)
 				{
-					newCol--;
+					while (!isCorrectAim(newRow, newCol, botEnemyBoard))
+					{
+						newCol--;
+					}
+					coordinates[0] = newCol;
+					coordinates[1] = newRow;
+					return coordinates;
 				}
-				coordinates[0] = newCol;
-				coordinates[1] = newRow;
-				return coordinates;
+				else 
+				{
+					newCol += 2;
+					while (!isCorrectAim(newRow, newCol, botEnemyBoard))
+					{
+						newCol++;
+					}
+					coordinates[0] = newCol;
+					coordinates[1] = newRow;
+					return coordinates;
+				}
 			}
 		}
 		if (!col)
