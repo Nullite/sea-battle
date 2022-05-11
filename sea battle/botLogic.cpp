@@ -760,8 +760,8 @@ std::vector<int> finishing(std::vector<int>& coords, std::string& botEnemyBoard)
 bool checkIfAloneSquare(Bot& bot, std::vector<int>& coordinates)
 {
 	int square = returnSquare(coordinates[0], coordinates[1]);
-	int row = coordinates[0];
-	int col = coordinates[1];
+	int row = coordinates[1];
+	int col = coordinates[0];
 	int frontSquare;
 	int backSquare;
 	int upperSquare;
